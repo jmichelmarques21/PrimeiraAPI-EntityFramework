@@ -14,3 +14,17 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<LojaDbContext>(options=>options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 2))));
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.MapPost("/createproduto", async (LojaDbContext dbContext, Produto newProduto) => {
+  dbContext.Produtos.Add(newProduto);
+  await dbContext.SaveChangesAsync();
+  return Results.Created($"/createproduto/{newProduto.Id}", newProduto);
+});

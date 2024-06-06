@@ -103,3 +103,4 @@ C:\Users\jmich\OneDrive\Área de Trabalho\faculdade-3-semestre\c#Quinta\Loja\obj
 C:\Users\jmich\OneDrive\Área de Trabalho\faculdade-3-semestre\c#Quinta\Loja\obj\Debug\net8.0\Loja.pdb
 C:\Users\jmich\OneDrive\Área de Trabalho\faculdade-3-semestre\c#Quinta\Loja\obj\Debug\net8.0\Loja.genruntimeconfig.cache
 C:\Users\jmich\OneDrive\Área de Trabalho\faculdade-3-semestre\c#Quinta\Loja\obj\Debug\net8.0\ref\Loja.dll
+C:\Users\jmich\OneDrive\Área de Trabalho\faculdade-3-semestre\c#Quinta\Loja\obj\Debug\net8.0\Loja.sourcelink.json
