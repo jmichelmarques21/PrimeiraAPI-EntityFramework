@@ -124,6 +124,12 @@ app.MapPost("/createfornecedor", async (LojaDbContext dbContext, Fornecedor newF
   return Results.Created($"createcliente/{newFornecedor.Id}", newFornecedor);
 });
 
+// endpoint consulta de fornecedores
+app.MapGet("/fornecedores", async (LojaDbContext dbContext) => {
+  var fornecedores = await dbContext.Fornecedores.ToListAsync();
+  return Results.Ok(fornecedores);
+});
+
 
 
 
