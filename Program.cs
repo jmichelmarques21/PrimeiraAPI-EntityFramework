@@ -97,6 +97,24 @@ app.MapGet("/clientes/{id}", async (int id, LojaDbContext dbContext) => {
   return Results.Ok(cliente);
 });
 
+// endpoint atualização do cliente pelo id
+app.MapPut("/clientes/{id}", async (int id, LojaDbContext dbContext, Cliente updateCliente) => {
+  var existingCliente = await dbContext.Clientes.FindAsync(id);
+  if (existingCliente == null) {
+    return Results.NotFound($"Produto with ID {id} not found.");
+  }
+
+  // atualizar os dados do produto existente
+  existingCliente.Nome = updateCliente.Nome;
+  existingCliente.Cpf = updateCliente.Cpf;
+  existingCliente.Email = updateCliente.Email;
+
+  // salvando no banco de dados
+  await dbContext.SaveChangesAsync();
+
+  // retorno do endpoint
+  return Results.Ok(existingCliente);
+});
 
 
 
