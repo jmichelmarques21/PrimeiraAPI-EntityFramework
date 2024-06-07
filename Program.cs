@@ -53,4 +53,24 @@ app.MapGet("/produtos/{id}", async (int id, LojaDbContext dbContext) => {
   return Results.Ok(produto);
 });
 
+app.MapPut("/produtos/{id}", async (int id, LojaDbContext dbContext, Produto updateProduto) => {
+  var existingProduto = await dbContext.Produtos.FindAsync(id);
+  if (existingProduto == null) {
+    return Results.NotFound($"Produto with ID {id} not found.");
+  }
+
+  // atualizar os dados do produto existente
+  existingProduto.Nome = updateProduto.Nome;
+  existingProduto.Preco = updateProduto.Preco;
+  existingProduto.Fornecedor = updateProduto.Fornecedor;
+
+  //salvando no banco de dados
+  await dbContext.SaveChangesAsync();
+
+  //retorno do endpoint
+  return Results.Ok(existingProduto);
+});
+
+
+
 app.Run();
