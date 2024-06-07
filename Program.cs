@@ -33,18 +33,20 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
 
-
+// endpoint criação de produto
 app.MapPost("/createproduto", async (LojaDbContext dbContext, Produto newProduto) => {
     dbContext.Produtos.Add(newProduto);
     await dbContext.SaveChangesAsync();
     return Results.Created($"/createproduto/{newProduto.Id}", newProduto);
 });
 
+// endpoint consulta de produtos
 app.MapGet("/produtos", async (LojaDbContext dbContext) => {
   var produtos = await dbContext.Produtos.ToListAsync();
   return Results.Ok(produtos);
 });
 
+// endpoint consulta de produto por id
 app.MapGet("/produtos/{id}", async (int id, LojaDbContext dbContext) => {
   var produto = await dbContext.Produtos.FindAsync(id);
   if (produto == null) {
@@ -53,6 +55,7 @@ app.MapGet("/produtos/{id}", async (int id, LojaDbContext dbContext) => {
   return Results.Ok(produto);
 });
 
+// endpoint atualização de produto por id
 app.MapPut("/produtos/{id}", async (int id, LojaDbContext dbContext, Produto updateProduto) => {
   var existingProduto = await dbContext.Produtos.FindAsync(id);
   if (existingProduto == null) {
@@ -64,12 +67,41 @@ app.MapPut("/produtos/{id}", async (int id, LojaDbContext dbContext, Produto upd
   existingProduto.Preco = updateProduto.Preco;
   existingProduto.Fornecedor = updateProduto.Fornecedor;
 
-  //salvando no banco de dados
+  // salvando no banco de dados
   await dbContext.SaveChangesAsync();
 
-  //retorno do endpoint
+  // retorno do endpoint
   return Results.Ok(existingProduto);
 });
+
+
+// endpoint criação de cliente
+app.MapPost("/createcliente", async (LojaDbContext dbContext, Cliente newCliente) => {
+  dbContext.Clientes.Add(newCliente);
+  await dbContext.SaveChangesAsync();
+  return Results.Created($"createcliente/{newCliente.Id}", newCliente);
+});
+
+// endpoint consulta de clientes
+app.MapGet("/clientes", async (LojaDbContext dbContext) => {
+  var clientes = await dbContext.Clientes.ToListAsync();
+  return Results.Ok(clientes);
+});
+
+// endpoint consulta de cliente por id
+app.MapGet("/clientes/{id}", async (int id, LojaDbContext dbContext) => {
+  var cliente = await dbContext.Clientes.FindAsync(id);
+  if (cliente == null) {
+    return Results.NotFound($"Cliente with ID {id} not found.");
+  }
+  return Results.Ok(cliente);
+});
+
+
+
+
+
+
 
 
 
