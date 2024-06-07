@@ -117,6 +117,15 @@ app.MapPut("/clientes/{id}", async (int id, LojaDbContext dbContext, Cliente upd
 });
 
 
+// endpoint criação de fornecedor
+app.MapPost("/createfornecedor", async (LojaDbContext dbContext, Fornecedor newFornecedor) => {
+  dbContext.Fornecedores.Add(newFornecedor);
+  await dbContext.SaveChangesAsync();
+  return Results.Created($"createcliente/{newFornecedor.Id}", newFornecedor);
+});
+
+
+
 
 
 
