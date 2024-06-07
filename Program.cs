@@ -130,6 +130,36 @@ app.MapGet("/fornecedores", async (LojaDbContext dbContext) => {
   return Results.Ok(fornecedores);
 });
 
+// endpoint consulta de fornecedor por id
+app.MapGet("/fornecedores/{id}", async (int id, LojaDbContext dbContext) => {
+  var fornecedor = await dbContext.Fornecedores.FindAsync(id);
+  if (fornecedor == null) {
+    return Results.NotFound($"Fornecedor with ID {id} not found.");
+  }
+  return Results.Ok(fornecedor);
+});
+
+// endpoint atualização de fornecedor por existingFornecedor
+app.MapPut("/fornecedores/{id}", async (int id, LojaDbContext dbContext, Fornecedor updateFornecedor) => {
+  var existingFornecedor = await dbContext.Fornecedores.FindAsync(id);
+  if (existingFornecedor == null) {
+    return Results.NotFound($"Produto with ID {id} not found.");
+  }
+
+  // atualizar os dados do produto existente
+  existingFornecedor.Cnpj = updateFornecedor.Cnpj;
+  existingFornecedor.Nome = updateFornecedor.Nome;
+  existingFornecedor.Endereco = updateFornecedor.Endereco;
+  existingFornecedor.Email = updateFornecedor.Email;
+  existingFornecedor.Telefone = updateFornecedor.Telefone;
+
+  // salvando no banco de dados
+  await dbContext.SaveChangesAsync();
+
+  // retorno do endpoint
+  return Results.Ok(existingFornecedor);
+});
+
 
 
 
