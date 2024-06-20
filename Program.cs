@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Loja.data;
 using Loja.models;
+using Loja.services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -24,6 +26,11 @@ builder.Services.AddDbContext<LojaDbContext>(options => options.UseMySql(connect
 
 var app = builder.Build();
 
+//Configurar as requisiçoes HTTP
+if (app.Environment.IsDevelopment()){
+  app.UseDeveloperExceptionPage();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -34,21 +41,20 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
 
 // endpoint criação de produto
-app.MapPost("/createproduto", async (LojaDbContext dbContext, Produto newProduto) => {
-    dbContext.Produtos.Add(newProduto);
-    await dbContext.SaveChangesAsync();
-    return Results.Created($"/createproduto/{newProduto.Id}", newProduto);
+app.MapPost("/createproduto", async (Produto produto, ProductService productService) => {
+    await productService.AddProductAsync(produto);
+    return Results.Created($"/createproduto/{produto.Id}", produto);
 });
 
 // endpoint consulta de produtos
-app.MapGet("/produtos", async (LojaDbContext dbContext) => {
-  var produtos = await dbContext.Produtos.ToListAsync();
+app.MapGet("/produtos", async (ProductService productService) => {
+  var produtos = await productService.GetAllProductsAsync();
   return Results.Ok(produtos);
 });
 
 // endpoint consulta de produto por id
-app.MapGet("/produtos/{id}", async (int id, LojaDbContext dbContext) => {
-  var produto = await dbContext.Produtos.FindAsync(id);
+app.MapGet("/produtos/{id}", async (int id, ProductService productService) => {
+  var produto = await productService.GetProdutoByIdAsync(id);
   if (produto == null) {
     return Results.NotFound($"Produto with ID {id} not found.");
   }
