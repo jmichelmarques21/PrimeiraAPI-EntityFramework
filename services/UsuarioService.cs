@@ -44,7 +44,7 @@ namespace Loja.services
         public async Task DeleteUsuarioAsync(int id){
             var usuario = await _dbContext.Usuarios.FindAsync(id);
             if (usuario != null) {
-                _dbContext.Fornecedores.Remove(usuario);
+                _dbContext.Usuarios.Remove(usuario);
                 await _dbContext.SaveChangesAsync();
             }
         }
