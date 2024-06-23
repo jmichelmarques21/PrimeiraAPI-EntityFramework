@@ -23,7 +23,9 @@ namespace Loja.services
 
         //Método para consultar um produto a partir do seu id
         public async Task<Produto>GetProdutoByIdAsync(int id){
+#pragma warning disable CS8603 // Possible null reference return.
             return await _dbContext.Produtos.FindAsync(id);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         //Método para gravar um novo produto
