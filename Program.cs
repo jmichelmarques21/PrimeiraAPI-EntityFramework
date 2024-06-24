@@ -271,4 +271,61 @@ app.MapDelete("/fornecedores{id}", async (int id, FornecedorService fornecedorSe
   return Results.Ok();
 });
 
+
+//Endpoints de vendas
+
+//Endpoint criação de venda
+
+app.MapPost("/createvenda", async (Venda venda, VendaService vendaService, ClienteService clienteService, ProductService productService) =>
+{
+  try
+  {
+    await vendaService.AddVendaAsync(venda, clienteService, productService);
+    return Results.Created($"/createvenda/{venda.Id}", venda);
+  }
+  catch (ArgumentException ex)
+  {
+    return Results.BadRequest(ex.Message);
+  }
+});
+
+app.MapGet("/vendas", async (VendaService vendaService) =>
+{
+  var vendas = await vendaService.GetAllVendasAsync();
+  return Results.Ok(vendas);
+});
+
+app.MapGet("/vendas/{id}", async (int id, VendaService vendaService) =>
+{
+  var venda = await vendaService.GetVendaByIdAsync(id);
+  if (venda == null)
+  {
+    return Results.NotFound($"Venda with ID {id} not found.");
+  }
+  return Results.Ok(venda);
+});
+
+app.MapPut("/vendas/{id}", async (int id, Venda venda, VendaService vendaService) =>
+{
+  if (id != venda.Id)
+  {
+    return Results.BadRequest("Venda ID mismatch.");
+  }
+
+  await vendaService.UpdateVendaAsync(venda);
+  return Results.Ok(venda);
+});
+
+app.MapDelete("/vendas{id}", async (int id, VendaService vendaService) =>
+{
+  await vendaService.DeleteVendaAsync(id);
+  return Results.Ok();
+});
+
+
+
+
+
+
+
 app.Run();

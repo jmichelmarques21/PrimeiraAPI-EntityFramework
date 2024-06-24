@@ -29,11 +29,21 @@ namespace Loja.services
             return await _dbContext.Vendas.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
         }
 
-        // Método para gravar uma nova venda
-        public async Task AddVendaAsync(Venda venda)
+        // Método para gravar uma nova venda com validação de cliente e produto
+        public async Task AddVendaAsync(Venda venda, ClienteService clienteService, ProductService productService)
         {
             if (venda == null)
                 throw new ArgumentNullException(nameof(venda));
+
+            // Validar se o cliente existe
+            var clienteExiste = await clienteService.GetClienteByIdAsync(venda.Cliente.Id);
+            if (clienteExiste == null)
+                throw new ArgumentException("Cliente não encontrado.");
+
+            // Validar se o produto existe
+            var produtoExiste = await productService.GetProdutoByIdAsync(venda.Produto.Id);
+            if (produtoExiste == null)
+                throw new ArgumentException("Produto não encontrado.");
 
             _dbContext.Vendas.Add(venda);
             await _dbContext.SaveChangesAsync();
