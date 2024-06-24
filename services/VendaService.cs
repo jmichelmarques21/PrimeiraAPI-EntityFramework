@@ -69,5 +69,33 @@ namespace Loja.services
                 await _dbContext.SaveChangesAsync();
             }
         }
+
+        // Método para consultar vendas detalhadas por produto
+        public async Task<List<VendaDetalhadaDto>> GetVendasDetalhadasPorProdutoAsync(int produtoId)
+        {
+            return await _dbContext.Vendas
+                .Where(v => v.Produto.Id == produtoId)
+                .Select(v => new VendaDetalhadaDto
+                {
+                    ProdutoNome = v.Produto.Nome,
+                    DataVenda = v.DataVenda,
+                    VendaId = v.Id,
+                    ClienteNome = v.Cliente.Nome,
+                    Quantidade = v.Quantidade,
+                    Preco = v.Preco
+                })
+                .ToListAsync();
+        }
+    }
+
+    // DTO para retornar os dados detalhados da venda
+    public class VendaDetalhadaDto
+    {
+        public string ProdutoNome { get; set; }
+        public string DataVenda { get; set; }
+        public int VendaId { get; set; }
+        public string ClienteNome { get; set; }
+        public int Quantidade { get; set; }
+        public float Preco { get; set; }
     }
 }

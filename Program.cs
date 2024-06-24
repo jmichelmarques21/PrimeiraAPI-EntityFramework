@@ -322,6 +322,17 @@ app.MapDelete("/vendas{id}", async (int id, VendaService vendaService) =>
   return Results.Ok();
 });
 
+// Endpoint para consulta detalhada de vendas por produto
+app.MapGet("/vendas/produto/{produtoId}", async (int produtoId, VendaService vendaService) =>
+{
+  var vendasDetalhadas = await vendaService.GetVendasDetalhadasPorProdutoAsync(produtoId);
+  if (vendasDetalhadas == null || !vendasDetalhadas.Any())
+  {
+    return Results.NotFound($"No vendas found for product ID {produtoId}.");
+  }
+  return Results.Ok(vendasDetalhadas);
+});
+
 
 
 
