@@ -19,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<FornecedorService>();
 builder.Services.AddScoped<ClienteService>();
+builder.Services.AddScoped<VendaService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
